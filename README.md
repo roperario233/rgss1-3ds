@@ -42,7 +42,9 @@ What that means if you build on it:
 ![QR code for the engine CIA](docs/qr-install.png)
 
 1. On the 3DS open **FBI → Remote Install → Scan QR** and scan the code above (or
-   copy `ttm3ds-engine.cia` to the SD card and pick it in FBI).
+   copy `ttm3ds-engine.cia` from the
+   [latest release](https://github.com/roperario233/rgss1-3ds/releases/latest) to the
+   SD card and pick it in FBI).
 2. Launch **RGSS1 3DS** from the HOME menu once: it will say no game was found.
 3. Copy your own game into `SD:/3ds/ttm3ds/<folder>/` — the archive and its
    `Game.ini` (and `Fonts/`, `lang.dat`, `audio.ttma` if you have them); the
