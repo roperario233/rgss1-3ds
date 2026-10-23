@@ -85,8 +85,9 @@ add yours with a [port report](.github/ISSUE_TEMPLATE/port-report.md).
 - **Both Sigmund minisodes** as independent games, with their own saves folder.
 - **A launcher** for the games it finds (card and built-in), with the last choice
   remembered.
-- **A HOME-menu banner** (static, 129 MB → 3 MB engine image), 804 MHz + L2 cache,
-  124 MB New 3DS mode.
+- **A HOME-menu banner** on the tile, plus 804 MHz + L2 cache and the 124 MB New
+  3DS mode; the animated banner is opt-in because this console's HOME menu refused
+  it (`RUN19-STATE.md`).
 - **~250 PC assertions** that run without a console, plus the `RUN*.md` records of
   every console bug and its fix.
 

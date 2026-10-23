@@ -1,4 +1,4 @@
-#---------------------------------------------------------------------------------
+﻿#---------------------------------------------------------------------------------
 # ttm3ds -- the To the Moon 3DS engine app.
 #
 # Standard devkitPro 3DS makefile plus mruby (with the engine's gems) and
@@ -25,10 +25,10 @@ INCLUDES	:=	include
 ROMFS		:=	romfs
 
 # Metadata that ends up in the SMDH (the HOME menu's icon + title text).
-APP_TITLE	:=	To the Moon 3DS
-APP_DESCRIPTION	:=	To the Moon on the 3DS (needs your own copy of the game)
-APP_ICON	:=	$(TOPDIR)/icon.png
-APP_AUTHOR	:=	ttm3ds port project
+APP_TITLE := $(or $(TTM_APP_TITLE),To the Moon 3DS)
+APP_DESCRIPTION := $(or $(TTM_APP_DESCRIPTION),To the Moon on the 3DS (needs your own copy of the game))
+APP_ICON := $(if $(TTM_APP_ICON),$(TTM_APP_ICON),$(TOPDIR)/icon.png)
+APP_AUTHOR := $(or $(TTM_APP_AUTHOR),ttm3ds port project)
 
 #---------------------------------------------------------------------------------
 # options for code generation

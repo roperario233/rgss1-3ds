@@ -58,7 +58,7 @@ contains the game and must never be published** (see `LICENSE` and `README.md`).
 cd engine
 powershell -ExecutionPolicy Bypass -File build.ps1            # engine\ttm3ds.3dsx (~24 MB with audio)
 powershell -ExecutionPolicy Bypass -File build_cia.ps1        # engine\ttm3ds.cia  (129 MB, game inside)
-powershell -ExecutionPolicy Bypass -File build_cia.ps1 -EngineOnly   # ttm3ds-engine.cia (no game, ~3 MB)
+powershell -ExecutionPolicy Bypass -File build_cia.ps1 -EngineOnly   # ttm3ds-engine.cia (no game, 2 MB)
 powershell -ExecutionPolicy Bypass -File build_cia.ps1 -AnimatedBanner  # opt-in; this console refused it
 ```
 

@@ -23,7 +23,8 @@
 # a separate partition that is read on demand. -NoCopy leaves the .3dsx in the
 # scratch directory (build_cia.ps1 uses it so the small 3dsx in engine/ stays).
 
-param([switch]$NoAudio, [switch]$WithMinisodes, [switch]$NoCopy)
+param([switch]$NoAudio, [switch]$WithMinisodes, [switch]$NoCopy,
+      [string]$Icon = '', [string]$Title = '', [string]$Description = '')
 
 $ErrorActionPreference = 'Stop'
 
@@ -77,7 +78,14 @@ if ($WithMinisodes -and (Test-Path $extra)) {
     Write-Host "== the game and the minisodes not packed (the CIA build packs them; -WithMinisodes does it here too) =="
 }
 Copy-Item "$src/Makefile" "$scratch/Makefile"
-Copy-Item "$src/icon.png" "$scratch/icon.png"
+# -Icon / -Title / -Description change the SMDH metadata (the HOME menu's tile):
+# the engine-only release is "RGSS1 3DS" with its own icon, the game build keeps
+# this default. build_cia.ps1 -EngineOnly passes all three.
+$iconSrc = if ($Icon) { $Icon } else { "$src/icon.png" }
+if (-not (Test-Path $iconSrc)) { throw "missing icon: $iconSrc" }
+Copy-Item $iconSrc "$scratch/icon.png"
+if ($Title)       { $env:TTM_APP_TITLE = $Title }
+if ($Description) { $env:TTM_APP_DESCRIPTION = $Description }
 
 $env:DEVKITPRO = $devkitpro
 $env:DEVKITARM = "$devkitpro/devkitARM"

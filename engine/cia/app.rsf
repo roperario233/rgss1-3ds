@@ -1,4 +1,4 @@
-# app.rsf -- Rom Specification File for makerom (the engine's CIA build)
+﻿# app.rsf -- Rom Specification File for makerom (the engine's CIA build)
 #
 # This is the file that decides how much RAM the title gets, via SystemModeExt
 # (filled in by build_cia.ps1). A .3dsx build cannot ask for a mode at all -- it
@@ -17,8 +17,8 @@
 # reapplies 804 MHz + L2 after a return from HOME).
 
 BasicInfo:
-  Title                   : To the Moon 3DS
-  ProductCode             : CTR-P-TTM3
+  Title                   : $(APP_TITLE)
+  ProductCode             : $(APP_CODE)
   Logo                    : Nintendo        # splash shown after launch
 
 RomFs:
@@ -30,7 +30,7 @@ RomFs:
 
 TitleInfo:
   Category                : Application
-  UniqueId                : 0xff3fe         # the M1 test app keeps 0xff3ff, so both can be installed
+  UniqueId                : $(APP_ID)    # engine 0xff3fd / game 0xff3fe (M1 test app 0xff3ff)
 
 Option:
   UseOnSD                 : true            # install to the SD card

@@ -28,7 +28,11 @@ param(
     # ttm3ds_anim.cia. It is opt-in because it is the one banner this console
     # would not take: installed, the HOME menu showed a blank tile and hung
     # (run 19), while the flat M1 banner below worked. See RUN19-STATE.md.
-    [switch]$AnimatedBanner
+    [switch]$AnimatedBanner,
+    # -EngineOnly: the publishable build -- the runtime with none of the game in it
+    # (no romfs audio, no minisodes, its own icon and banner, the title "RGSS1 3DS").
+    # It is the artifact the release ships; tools/check_cia_clean.py proves it.
+    [switch]$EngineOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -49,6 +53,17 @@ $bannerBnr  = "$root\work\banner\banner.bnr"   # tools/make_banner.py writes thi
 # theme in a seamless loop) is built once by tools/make_banner.py, because it
 # needs the game's own art and music. Without it -- a fresh checkout, or a build
 # on a machine without the game -- the flat banner from milestone M1 stands in.
+# The engine-only build carries none of the game, so its banner and icon come from
+# tools/make_engine_brand.py (drawn from nothing, navy and gold like the launcher).
+if ($EngineOnly) {
+    if ($AnimatedBanner) { throw "-AnimatedBanner is the game's banner: it cannot go with -EngineOnly" }
+    $brandDir  = if ($env:TTM_BRAND) { $env:TTM_BRAND } else { "$root\work\brand" }
+    $bannerPng = "$brandDir\banner.png"
+    $bannerWav = "$brandDir\banner.wav"
+    foreach ($f in @("$brandDir\icon.png", $bannerPng, $bannerWav)) {
+        if (-not (Test-Path $f)) { throw "missing: $f -- run python tools\make_engine_brand.py" }
+    }
+}
 $customBanner = (Test-Path $bannerBnr) -and $AnimatedBanner
 
 Write-Host "== checking the tools and the assets =="
@@ -80,8 +95,17 @@ if ($newestGem -and (Get-Item $mrubyLib).LastWriteTime -lt $newestGem.LastWriteT
 # -WithMinisodes: the two Sigmund minisodes go in this app's romfs (40 MB), so
 # the console needs nothing but the CIA. -NoCopy keeps the small 3dsx in engine/
 # as it is -- a .3dsx is loaded into RAM whole, so the episodes do not go there.
-Write-Host "== building the app (build.ps1 -WithMinisodes) =="
-& powershell -ExecutionPolicy Bypass -File "$src\build.ps1" -WithMinisodes -NoCopy
+if ($EngineOnly) {
+    # -NoAudio: romfs gets the engine's Ruby and nothing else. The game (if any) comes
+    # from the SD card at launch, which is the whole point of this build.
+    Write-Host "== building the app (build.ps1 -NoAudio: nothing of the game goes in) =="
+    & powershell -ExecutionPolicy Bypass -File "$src\build.ps1" -NoAudio -NoCopy `
+        -Icon "$brandDir\icon.png" -Title 'RGSS1 3DS' `
+        -Description 'RGSS1 (RPG Maker XP) runtime: bring your own game'
+} else {
+    Write-Host "== building the app (build.ps1 -WithMinisodes) =="
+    & powershell -ExecutionPolicy Bypass -File "$src\build.ps1" -WithMinisodes -NoCopy
+}
 $elf  = "$scratch\ttm3ds.elf"
 $smdh = "$scratch\ttm3ds.smdh"
 foreach ($f in @($elf, $smdh, "$scratch\romfs")) {
@@ -99,19 +123,31 @@ if ($customBanner) {
     Write-Host "  animated CGFX banner, title theme looped (tools/make_banner.py)"
 } else {
     & $bannertool makebanner -i $bannerPng -a $bannerWav -o "$scratch\banner.bnr"
-    Write-Host "  flat banner, silent (run tools/make_banner.py for the animated one)"
+    if ($EngineOnly) {
+        Write-Host "  the engine's own banner (tools/make_engine_brand.py), silent"
+    } else {
+        Write-Host "  flat banner, silent (run tools/make_banner.py for the animated one)"
+    }
 }
 if (-not (Test-Path "$scratch\banner.bnr")) { throw "bannertool failed" }
 
 # ---- 3. package the CIA -----------------------------------------------------
 # makerom must run inside the scratch dir: cia/app.rsf says "RootPath: romfs",
 # which is relative to the working directory.
-Write-Host "== packaging the CIA (SystemModeExt $SystemModeExt) =="
+# The title, product code, unique id and output name differ between the two builds:
+# both can be installed side by side (different UniqueId), and only the engine-only
+# one leaves this machine.
+$ciaTitle = if ($EngineOnly) { 'RGSS1 3DS' }  else { 'To the Moon 3DS' }
+$ciaCode  = if ($EngineOnly) { 'CTR-P-RGSS' } else { 'CTR-P-TTM3' }
+$ciaId    = if ($EngineOnly) { '0xff3fd' }    else { '0xff3fe' }
+$ciaOut   = if ($EngineOnly) { 'ttm3ds-engine.cia' } else { 'ttm3ds.cia' }
+Write-Host "== packaging the CIA ($ciaTitle, SystemModeExt $SystemModeExt) =="
 Push-Location $scratch
 try {
-    $log = & $makerom -v -f cia -o 'ttm3ds.cia' -target t -exefslogo `
+    $log = & $makerom -v -f cia -o $ciaOut -target t -exefslogo `
         -elf 'ttm3ds.elf' -icon 'ttm3ds.smdh' -banner 'banner.bnr' `
         -rsf "$src\cia\app.rsf" "-DAPP_SYSTEM_MODE_EXT=$SystemModeExt" `
+        "-DAPP_TITLE=$ciaTitle" "-DAPP_CODE=$ciaCode" "-DAPP_ID=$ciaId" `
         -major 0 -minor 0 -micro 0 2>&1
     $log | Out-File -FilePath "$src\build_cia.log" -Encoding utf8
     $log | Select-Object -Last 20 | Write-Host
@@ -119,13 +155,14 @@ try {
     Pop-Location
 }
 
-$out = "$scratch\ttm3ds.cia"
+$out = "$scratch\$ciaOut"
 if (-not (Test-Path $out)) {
     Write-Host ""
     throw "CIA build failed - full log in $src\build_cia.log"
 }
 
-$name = if ($SystemModeExt -eq 'Legacy') { 'ttm3ds_legacy.cia' }
+$name = if ($EngineOnly) { 'ttm3ds-engine.cia' }
+        elseif ($SystemModeExt -eq 'Legacy') { 'ttm3ds_legacy.cia' }
         elseif ($AnimatedBanner) { 'ttm3ds_anim.cia' }
         else { 'ttm3ds.cia' }
 Copy-Item $out "$src\$name" -Force
@@ -133,6 +170,17 @@ $size = [math]::Round((Get-Item $out).Length / 1MB, 1)
 Write-Host ""
 Write-Host ("== OK: " + $src + "\" + $name + " (" + $size + " MB) ==")
 Write-Host ""
+if ($EngineOnly) {
+    Write-Host "This CIA carries none of the game: it is the engine alone, and the one"
+    Write-Host "artifact this project publishes. Prove that before it leaves the machine:"
+    Write-Host ""
+    Write-Host ("  python tools\check_cia_clean.py " + $src + "\" + $name)
+    Write-Host ""
+    Write-Host "  1. FBI > Remote Install > Scan QR, or install $name from the SD card"
+    Write-Host "  2. copy your game to SD:/3ds/ttm3ds/<folder>/ (archive, Game.ini, Fonts/)"
+    Write-Host "  3. launch RGSS1 3DS; the launcher lists the games it found"
+    exit 0
+}
 Write-Host "To install it once:"
 Write-Host "  1. copy $name to the SD card (anywhere, e.g. /cias/)"
 Write-Host "  2. open FBI (or GodMode9) and install it from that path"

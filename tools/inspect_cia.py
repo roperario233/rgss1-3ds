@@ -99,13 +99,28 @@ def main():
     print("  main-thread stack     : 0x%X (%d KB)" % (stack, stack // 1024))
 
     # ---- SMDH title text --------------------------------------------------
-    pos = data.find("To the Moon".encode("utf-16-le"))
-    if pos > 0:
-        raw = data[pos:pos + 0x80]
-        text = raw.decode("utf-16-le", "replace").split("\x00")[0]
-        print("\n  SMDH long title       : %r" % text)
+    # The SMDH is an exefs entry: the NCCH header says where the exefs is (0x1A3,
+    # in 0x200-byte units), the ExeFS header lists up to ten entries of
+    # (8-byte name, u32 offset, u32 size), and the data starts 0x200 after that
+    # header. This finds ".smdh" whatever the title is called, so the tool works
+    # for the game build and the engine-only build alike.
+    exefs = ncch - 0x100 + struct.unpack_from("<I", data, ncch - 0x100 + 0x1A0)[0] * 0x200
+    smdh = None
+    for i in range(10):
+        name = data[exefs + i * 0x10: exefs + i * 0x10 + 8]
+        if name.rstrip(b"\x00") in (b".smdh", b"icon"):
+            off, size = struct.unpack_from("<II", data, exefs + i * 0x10 + 8)
+            smdh = exefs + 0x200 + off
+            break
+    if smdh:
+        def _u16(off, n):
+            return data[smdh + off: smdh + off + n * 2].decode(
+                "utf-16-le", "replace").split("\x00")[0]
+        print("  SMDH short title      : %r" % _u16(0x08, 0x40))
+        print("  SMDH long title       : %r" % _u16(0x88, 0x80))
+        print("  SMDH publisher        : %r" % _u16(0x188, 0x40))
     else:
-        print("\n  SMDH long title       : (not found)")
+        print("\n  SMDH title            : (no .smdh entry in the exefs)")
     return 0
 
 
