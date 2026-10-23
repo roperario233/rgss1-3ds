@@ -1,0 +1,45 @@
+# Extracted game data and analysis output — NOT for distribution.
+# The .rgssad, audio, fonts and the game's own Ruby are Freebird Games' copyright.
+work/
+
+# Local copies of the game package
+*.zip
+
+# Game data must never be committed, even if copied here by hand (defence in depth).
+# A pull request that adds any of these is closed: the repo ships no game content.
+*.rgssad
+*.ttma
+lang.dat
+
+# 3DS build output (the CIAs embed the game's data and music, so never commit one;
+# the engine-only CIA is uploaded as a release asset instead)
+*.log
+3ds-app/build/
+3ds-app/romfs/
+3ds-app/*.3dsx
+3ds-app/*.cia
+3ds-app/*.elf
+3ds-app/*.smdh
+3ds-app/*.lst
+3ds-app/cia/icon.png
+3ds-app/cia/banner.png
+3ds-app/cia/banner.wav
+
+# pycgfx (glTF -> CGFX for HOME-menu banners) publishes no license, so it is
+# vendored locally for this machine only and never committed or redistributed.
+tools/pycgfx/
+__pycache__/
+*.pyc
+
+# M2 Ruby spike: build output
+ruby-spike/*.3dsx
+
+# Engine: build output, PC runtime data and screenshots (they show the game's art)
+engine/*.3dsx
+engine/*.cia
+engine/*.elf
+engine/*.smdh
+engine/pc_data/
+engine/pc/shots/
+# the app icon is made from the game's art, like 3ds-app/cia/icon.png
+engine/icon.png

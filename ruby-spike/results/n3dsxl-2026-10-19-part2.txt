@@ -1,0 +1,43 @@
+M2 Ruby spike part 2: mruby 4.0.0
+CPU 804 MHz + L2
+heap 92740 KB, linear 32768 KB
+mrb_open     3.1 ms  +61 KB
+parse        8.1 ms  (10 KB src)
+codegen      2.3 ms
+== M2 part 2 on 3ds: 600 frames, 124 events ==
+ms         avg   p99    max >25ms
+GC off      5.4   6.2    6.4    0
+-- English --
+live set +38000 objs: 2015 ms, +1635 KB
+gc_live 39375, full GC 28.9 ms
+ms         avg   p99    max >25ms
+incr +0     5.7  10.7   14.7    0
+incr +2k   24.3  35.2   35.6   63
+gen +0      5.8  10.4   76.0    3
+gen +2k    23.8  93.3   97.2   73
+-- translated --
+live set +34000 objs: 1783 ms, +2495 KB
+gc_live 73384, full GC 86.8 ms
+ms         avg   p99    max >25ms
+incr +0     5.6  11.7   16.1    0
+incr +2k   25.1  44.0   44.7   80
+gen +0      5.8  12.9  132.6    1
+gen +2k    24.8  73.8  194.0   51
+run      80541.7 ms
+Ruby work alone (GC off):
+GC off      5.4   6.2    6.4    0
+English: 39379 live, full GC 29 ms
+ms         avg   p99    max >25ms
+incr +0     5.7  10.7   14.7    0
+incr +2k   24.3  35.2   35.6   63
+gen +0      5.8  10.4   76.0    3
+gen +2k    23.8  93.3   97.2   73
+translated: 73388 live, full GC 87 ms
+ms         avg   p99    max >25ms
+incr +0     5.6  11.7   16.1    0
+incr +2k   25.1  44.0   44.7   80
+gen +0      5.8  12.9  132.6    1
+gen +2k    24.8  73.8  194.0   51
+heap in use   5864 KB (5656 after GC)
+mruby peak   11938 KB of 92740 KB heap
+after close    -10 KB (mruby 0 B)

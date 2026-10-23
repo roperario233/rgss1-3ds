@@ -1,0 +1,39 @@
+M2 Ruby spike part 3: mruby 4.0.0
+CPU 804 MHz + L2
+heap 92684 KB, linear 32768 KB
+mrb_open     3.2 ms  +62 KB
+parse        0.3 ms  (0 KB src)
+codegen      0.1 ms
+== M2 part 3: the game's own scripts, headless ==
+archive: 979 files, indexed in 1894 ms
+Scripts.rxdata: 124 scripts, 32 ms
+map010 ev  1 avg  2.58 p99  4.1 max   4.1 >25:0
+  24 frames, load 0 ms, allocs avg 190 max 215
+map009 ev 10 avg  7.08 p99 26.5 max  37.2 >25:4
+  300 frames, load 280 ms, allocs avg 367 max 761
+map096 ev124 avg 40.51 p99 61.0 max 150.1 >25:300
+  300 frames, load 948 ms, allocs avg 1685 max 3193
+map029 ev 60 avg 12.48 p99 25.9 max 562.4 >25:3
+  300 frames, load 1635 ms, allocs avg 801 max 18159
+map129 ev 83 avg 10.86 p99 38.4 max  52.9 >25:4
+  300 frames, load 1682 ms, allocs avg 1034 max 2281
+map008 ev 45 avg 12.59 p99 16.6 max 160.5 >25:1
+  300 frames, load 1103 ms, allocs avg 776 max 2292
+map062 ev 81 avg 23.24 p99 47.4 max  54.4 >25:44
+  300 frames, load 1490 ms, allocs avg 1493 max 3320
+map077 ev 24 avg 10.93 p99 18.4 max  47.4 >25:2
+  300 frames, load 1893 ms, allocs avg 601 max 2124
+map001 ev 58 avg 22.53 p99 47.8 max 318.1 >25:4
+  300 frames, load 1924 ms, allocs avg 1014 max 2448
+scripts compiled+run before the game loop: 1958 ms
+-- 9 maps, 2424 frames, 362 over 25 ms, 0 errors --
+run      60343.4 ms
+real scripts, headless:
+9 maps 2424 frames, 362 over 25ms
+heaviest map 096 avg 40.5 ms
+worst frame 562.4 ms (map 029)
+allocs/frame up to 18159
+errors: 0
+heap in use   6203 KB (5579 after GC)
+mruby peak   11763 KB of 92684 KB heap
+after close     +0 KB (mruby 0 B)

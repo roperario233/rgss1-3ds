@@ -1,0 +1,34 @@
+M2 Ruby spike: mruby 4.0.0
+CPU 804 MHz + L2
+heap 93248 KB, linear 32768 KB
+mrb_open     2.6 ms  +55 KB
+parse        8.7 ms  (11 KB src)
+codegen      2.8 ms
+== mruby 4.0.0 on 3ds ==
+ok   class/super/alias     0.2 maxhp 1050
+ok   module/Comparable     0.2 3 items
+ok   Hash/Array            0.5 ok
+ok   String/format         0.2 ok
+ok   Table _dump/_load     4.0 1820 bytes
+ok   raise/rescue/retry    0.1 3 tries
+ok   eval/metaprog         0.3 ok
+ok   Integer/Float/Math    0.1 2**40 ok
+missing vs 1.8: Regexp Marshal Hash#index Array#nitems Object#type String#each
+1.8 semantics differ: str[0] ?a str.size
+-- performance --
+ok   100k allocations   1589.6 heap +-3KB
+ok   300k method calls  1341.0 224k calls/s
+ok   frame sim x60        85.5 1.40ms/frame
+ok   full GC, 200k live  851.3 pause 415.6ms
+ok   compile ~100KB      153.8 97KB, 678KB/s
+-- result: 13/13 checks passed --
+run       4041.5 ms
+checks    13/13 passed
+frame sim 1.40 ms (40fps=25ms)
+full GC   415.6 ms, 200k live
+compile   678 KB/s
+ -> game's 850KB: ~1.3 s
+missing:  Regexp Marshal Hash#index Array#nitems Object#type String#each
+heap in use   5197 KB (615 after GC)
+after close    -11 KB
+malloc peak      0 KB of 93248 KB heap

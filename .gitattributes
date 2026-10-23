@@ -1,0 +1,19 @@
+# Line endings: text normalised in the repo, PowerShell stays CRLF on checkout
+# (the .ps1 scripts are run by Windows PowerShell), everything else as authored.
+* text=auto
+*.ps1 text eol=crlf
+*.rb  text eol=lf
+*.c   text eol=lf
+*.h   text eol=lf
+*.py  text eol=lf
+*.md  text eol=lf
+
+# binaries
+*.png  binary
+*.jpg  binary
+*.wav  binary
+*.ogg  binary
+*.ttf  binary
+*.cia  binary
+*.3dsx binary
+*.bnr  binary
