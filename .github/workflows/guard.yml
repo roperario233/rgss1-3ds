@@ -1,0 +1,20 @@
+name: guard
+
+# The repository's one promise: it carries no game data. This job fails a push that
+# adds an archive, extracted data, a font, a log, or a build that may embed them --
+# the same check a contributor runs by hand (python tools/check_repo.py).
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  no-game-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: no game data, no build output, nothing oversized
+        run: python tools/check_repo.py
