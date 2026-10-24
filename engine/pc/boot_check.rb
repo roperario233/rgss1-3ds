@@ -15,8 +15,9 @@
 # Whether the game itself behaves the same from bytecode is pc/run_pc.rb's
 # screenshots, compared between a cold and a warm cache.
 
-$ttm_game_dir = "C:/Users/davao/OneDrive/Desktop/3ds project/work/game/"
-ARC = $ttm_game_dir + "To the Moon.rgssad"
+TTM.load_script(TTM.read_file("pc/game_dir.rb"), "pc/game_dir.rb")
+$ttm_game_dir = ttm_check_game_dir
+ARC = ttm_check_archive($ttm_game_dir)
 DIR = "../work/pc_data/scratch/bootcheck/"
 %w[rgss/compat.rb].each { |f| TTM.load_script(TTM.read_file("romfs/" + f), f) }
 TTM.dir_mkdir(DIR)

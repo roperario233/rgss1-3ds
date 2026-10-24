@@ -69,7 +69,8 @@ scratch build out of `engine/`.
 ## 5. Check before you run it
 
 ```powershell
-# ~250 assertions, no console needed
+# ~250 assertions, no console needed. They replay a real game, so they need your
+# copy (work/game/, or one line in work/game_dir.txt) and say so, exit 2, without it.
 powershell -ExecutionPolicy Bypass -File tools\run_checks.ps1
 
 # the repo must carry no game data

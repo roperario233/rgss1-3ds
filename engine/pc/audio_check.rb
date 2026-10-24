@@ -5,8 +5,11 @@
 #   C:\Users\davao\devkitpro\build\engine\host\bin\mruby.exe pc\audio_check.rb
 #
 # Needs ../work/audio/audio.ttma (python tools\pack_audio.py <the game's zip or
-# folder>) and ../work/audio/refs.txt (python work\audio_refs.py: every sound
-# the game's data names, and whether the game ships a file of that name).
+# folder>) and ../work/audio/refs.txt: every sound the game's data names, and whether
+# the game ships a file of that name, one "kind/name <tab> 0|1 <tab> where" line each.
+# refs.txt came from a one-off script that walked the extracted Data/ and the game's
+# zip; it is not part of this repository. Without both files, tools\run_checks.ps1
+# skips this check rather than failing it.
 #
 #  1. the pack: every stream decodes to the end with stb_vorbis (the decoder
 #     the console runs), with the channels, rate and length in its index
@@ -18,7 +21,8 @@
 #     fades end on time, the BGM goes quiet under an ME and comes back, the
 #     oldest SE gives way when all voices are busy, se_stop, the SE cache
 
-$ttm_game_dir = "C:/Users/davao/OneDrive/Desktop/3ds project/work/game/"
+TTM.load_script(TTM.read_file("pc/game_dir.rb"), "pc/game_dir.rb")
+$ttm_game_dir = ttm_check_game_dir
 $ttm_audio_pack = "../work/audio/audio.ttma"
 %w[rgss/compat.rb rgss/rgss.rb].each do |f|
   TTM.load_script(TTM.read_file("romfs/" + f), f)

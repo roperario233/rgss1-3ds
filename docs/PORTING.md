@@ -18,6 +18,8 @@ else is a matter of finding the gap and filling it.
 You do not need a console to find out whether a game boots:
 
 1. Copy the game into `work/game/` (the archive, `Fonts/`, `lang.dat` if it has one).
+   Anywhere else works too: write that folder on one line in `work/game_dir.txt`. The
+   checks then use that folder's `*.rgssad`, so the harness is not tied to one title.
 2. `engine\build_mruby.ps1` once, then run the harness:
    `mruby.exe pc\run_pc.rb` from `engine\` — it boots the game, drives it with the
    confirm key, and saves screenshots to `pc\shots\`.

@@ -17,8 +17,9 @@
 # The streams are the twelve of 083_Scene_Save.rb write_save_data plus UMS's $ams.
 # (pc/marshal_roundtrip.rb covers the format itself, against CRuby's bytes.)
 
-$ttm_game_dir = "C:/Users/davao/OneDrive/Desktop/3ds project/work/game/"
-$ttm_archive = $ttm_game_dir + "To the Moon.rgssad"
+TTM.load_script(TTM.read_file("pc/game_dir.rb"), "pc/game_dir.rb")
+$ttm_game_dir = ttm_check_game_dir
+$ttm_archive = ttm_check_archive($ttm_game_dir)
 ROMFS = "romfs/"
 SAVE = "save4.rxdata"
 

@@ -12,11 +12,12 @@
 # image still draws from its textures (and is decoded again when those are
 # gone), and nothing the game drew into is ever shed.
 
-$ttm_game_dir = "C:/Users/davao/OneDrive/Desktop/3ds project/work/game/"
+TTM.load_script(TTM.read_file("pc/game_dir.rb"), "pc/game_dir.rb")
+$ttm_game_dir = ttm_check_game_dir
 %w[rgss/compat.rb rgss/rgss.rb].each do |f|
   TTM.load_script(TTM.read_file("romfs/" + f), f)
 end
-TTM.archive_open($ttm_game_dir + "To the Moon.rgssad")
+TTM.archive_open(ttm_check_archive($ttm_game_dir))
 
 $ttm_passed = 0
 $ttm_failed = []

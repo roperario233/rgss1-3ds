@@ -16,11 +16,12 @@
 #     (y*32 - oy) + 32 + 32p, and lose to one at exactly that z (the tie goes
 #     to the sprite, made later), which is how characters pass behind trees
 
-$ttm_game_dir = "C:/Users/davao/OneDrive/Desktop/3ds project/work/game/"
+TTM.load_script(TTM.read_file("pc/game_dir.rb"), "pc/game_dir.rb")
+$ttm_game_dir = ttm_check_game_dir
 %w[rgss/compat.rb rgss/rgss.rb].each do |f|
   TTM.load_script(TTM.read_file("romfs/" + f), f)
 end
-TTM.archive_open($ttm_game_dir + "To the Moon.rgssad")
+TTM.archive_open(ttm_check_archive($ttm_game_dir))
 $ttm_max_tex_dim = 256
 
 # the car scene, the lighthouse cliff, a house (Tileset, with autotiles), and

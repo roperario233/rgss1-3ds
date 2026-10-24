@@ -27,8 +27,9 @@
 # Writes only under $ttm_data_dir (../work/pc_lang/ by default) and leaves it
 # empty of the setting file.
 
-$ttm_game_dir = $ttm_game_dir || "../work/game/"
-$ttm_archive  = $ttm_archive  || $ttm_game_dir + "To the Moon.rgssad"
+TTM.load_script(TTM.read_file("pc/game_dir.rb"), "pc/game_dir.rb")
+$ttm_game_dir = $ttm_game_dir || ttm_check_game_dir
+$ttm_archive  = $ttm_archive  || ttm_check_archive($ttm_game_dir)
 $ttm_lang_pack = $ttm_lang_pack || "../work/lang.dat"
 $ttm_data_dir = "../work/pc_lang/"
 TTM.file_delete($ttm_data_dir + "save/lang")

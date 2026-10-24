@@ -16,12 +16,13 @@
 # falling ash (type 18, power 12); both must put moving sprites on screen.
 # Saves pc/shots/effects_*.png.
 
-$ttm_game_dir = "C:/Users/davao/OneDrive/Desktop/3ds project/work/game/"
+TTM.load_script(TTM.read_file("pc/game_dir.rb"), "pc/game_dir.rb")
+$ttm_game_dir = ttm_check_game_dir
 $ttm_audio_pack = "../work/audio/audio.ttma"
 %w[rgss/compat.rb rgss/rgss.rb rgss/ttm_patches.rb].each do |f|
   TTM.load_script(TTM.read_file("romfs/" + f), f)
 end
-TTM.archive_open($ttm_game_dir + "To the Moon.rgssad")
+TTM.archive_open(ttm_check_archive($ttm_game_dir))
 
 $ttm_passed = 0
 $ttm_failed = []

@@ -116,7 +116,8 @@ powershell -ExecutionPolicy Bypass -File engine\build_mruby.ps1
 powershell -ExecutionPolicy Bypass -File engine\build.ps1
 powershell -ExecutionPolicy Bypass -File engine\build_cia.ps1
 
-# the PC harness, no console needed
+# the PC harness, no console needed (needs your own copy of the game: work/game/,
+# or one line in work/game_dir.txt)
 powershell -ExecutionPolicy Bypass -File tools\run_checks.ps1
 ```
 

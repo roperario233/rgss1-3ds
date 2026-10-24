@@ -10,9 +10,11 @@ powershell -ExecutionPolicy Bypass -File tools\run_checks.ps1   # ~250 assertion
 python tools\check_repo.py                                     # no game data, no huge files
 ```
 
-Both must pass. `check_repo.py` rejects a commit that adds `*.rgssad`, `*.ttma`,
-`lang.dat`, `*.cia`, `*.3dsx`, `*.ttf`, `*.log` or a file over 5 MB — the repo ships
-no game content, and CI runs the same check.
+Both must pass. The checks replay a real game, so they need your own copy: put it in
+`work/game/`, or write its folder on one line in `work/game_dir.txt` (the archive is
+whatever `*.rgssad` that folder holds). `check_repo.py` rejects a commit that adds
+`*.rgssad`, `*.ttma`, `lang.dat`, `*.cia`, `*.3dsx`, `*.ttf`, `*.log` or a file over
+5 MB — the repo ships no game content, and CI runs the same check.
 
 ## Rules
 
